@@ -143,51 +143,52 @@ public class SpawnerBreakListener implements Listener {
     }
 
     private void handleVanillaSpawnerBreak(Block block, CreatureSpawner creatureSpawner, Player player) {
-        Location location = block.getLocation();
-        ItemStack tool = player.getInventory().getItemInMainHand();
+        return;
+        // Location location = block.getLocation();
+        // ItemStack tool = player.getInventory().getItemInMainHand();
 
-        if (!validateBreakConditions(player, tool, null)) {
-            return;
-        }
+        // if (!validateBreakConditions(player, tool, null)) {
+        //     return;
+        // }
 
-        // Acquire location-based lock for vanilla spawners too
-        if (!locationLockManager.tryLock(location)) {
-            messageService.sendMessage(player, "action_in_progress");
-            return;
-        }
+        // // Acquire location-based lock for vanilla spawners too
+        // if (!locationLockManager.tryLock(location)) {
+        //     messageService.sendMessage(player, "action_in_progress");
+        //     return;
+        // }
 
-        try {
-            // Re-check block is still a spawner after acquiring lock
-            if (block.getType() != Material.SPAWNER) {
-                return;
-            }
+        // try {
+        //     // Re-check block is still a spawner after acquiring lock
+        //     if (block.getType() != Material.SPAWNER) {
+        //         return;
+        //     }
 
-            EntityType entityType = creatureSpawner.getSpawnedType();
-            ItemStack spawnerItem;
-            if (plugin.getConfig().getBoolean("natural_spawner.convert_to_smart_spawner", false)) {
-                spawnerItem = spawnerItemFactory.createSmartSpawnerItem(entityType);
-            } else {
-                spawnerItem = spawnerItemFactory.createVanillaSpawnerItem(entityType);
-            }
+        //     EntityType entityType = creatureSpawner.getSpawnedType();
+        //     ItemStack spawnerItem;
+        //     if (plugin.getConfig().getBoolean("natural_spawner.convert_to_smart_spawner", false)) {
+        //         spawnerItem = spawnerItemFactory.createSmartSpawnerItem(entityType);
+        //     } else {
+        //         spawnerItem = spawnerItemFactory.createVanillaSpawnerItem(entityType);
+        //     }
 
-            boolean directToInventory = plugin.getConfig().getBoolean("spawner_break.direct_to_inventory", false);
+        //     boolean directToInventory = plugin.getConfig().getBoolean("spawner_break.direct_to_inventory", false);
 
-            World world = location.getWorld();
-            if (world != null) {
-                block.setType(Material.AIR);
+        //     World world = location.getWorld();
+        //     if (world != null) {
+        //         block.setType(Material.AIR);
 
-                if (directToInventory) {
-                    giveSpawnersToPlayer(player, 1, spawnerItem);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.2f);
-                } else {
-                    world.dropItemNaturally(location.toCenterLocation(), spawnerItem);
-                }
+        //         if (directToInventory) {
+        //             giveSpawnersToPlayer(player, 1, spawnerItem);
+        //             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.2f);
+        //         } else {
+        //             world.dropItemNaturally(location.toCenterLocation(), spawnerItem);
+        //         }
 
-                reduceDurability(tool, player, plugin.getConfig().getInt("spawner_break.durability_loss", 1));
-            }
-        } finally {
-            locationLockManager.unlock(location);
-        }
+        //         reduceDurability(tool, player, plugin.getConfig().getInt("spawner_break.durability_loss", 1));
+        //     }
+        // } finally {
+        //     locationLockManager.unlock(location);
+        // }
     }
 
     private boolean validateBreakConditions(Player player, ItemStack tool, SpawnerData spawner) {
